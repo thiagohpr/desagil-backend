@@ -28,13 +28,17 @@ public class FirestoreDAO<T extends FirestoreEntity> implements DAO<String, T> {
 	private final CollectionReference collection;
 
 	@SuppressWarnings("unchecked")
-	public FirestoreDAO(String path) {
+	public FirestoreDAO(String path) throws APIException {
 		ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
 		Type[] types = type.getActualTypeArguments();
 		this.klass = (Class<T>) types[0];
 
 		Firestore firestore = FirestoreClient.getFirestore();
-		this.collection = firestore.collection(path);
+		try {
+			this.collection = firestore.collection(path);
+		} catch (IllegalArgumentException exception) {
+			throw new NotFoundException("Collection " + path + " not found");
+		}
 	}
 
 	private final List<T> execute(Query query) throws DBException, APIException {
