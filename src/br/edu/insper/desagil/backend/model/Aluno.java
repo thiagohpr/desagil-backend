@@ -2,7 +2,7 @@ package br.edu.insper.desagil.backend.model;
 
 import br.edu.insper.desagil.backend.core.FirestoreEntity;
 
-public class Aluno extends FirestoreEntity {
+public class Aluno implements FirestoreEntity {
 	private int matricula;
 	private String nome;
 	private boolean regular;

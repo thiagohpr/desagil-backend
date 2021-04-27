@@ -4,7 +4,7 @@ import java.util.List;
 
 import br.edu.insper.desagil.backend.core.FirestoreEntity;
 
-public class Turma extends FirestoreEntity {
+public class Turma implements FirestoreEntity {
 	private String codigo;
 	private List<String> alunos;
 

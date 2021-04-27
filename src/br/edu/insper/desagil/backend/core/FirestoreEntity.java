@@ -1,6 +1,6 @@
 package br.edu.insper.desagil.backend.core;
 
-public abstract class FirestoreEntity implements Entity<String> {
+public interface FirestoreEntity extends Entity<String> {
 	@Override
 	public abstract String key();
 }
