@@ -1,4 +1,6 @@
-package br.edu.insper.desagil.backend.core;
+package br.edu.insper.desagil.backend.firestore;
+
+import br.edu.insper.desagil.backend.core.Entity;
 
 public interface FirestoreEntity extends Entity<String> {
 	@Override
