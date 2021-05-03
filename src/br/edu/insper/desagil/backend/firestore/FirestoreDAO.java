@@ -1,4 +1,4 @@
-package br.edu.insper.desagil.backend.core;
+package br.edu.insper.desagil.backend.firestore;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -17,6 +17,7 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
 
+import br.edu.insper.desagil.backend.core.DAO;
 import br.edu.insper.desagil.backend.core.exception.APIException;
 import br.edu.insper.desagil.backend.core.exception.DBException;
 import br.edu.insper.desagil.backend.core.exception.FirestoreExecutionException;

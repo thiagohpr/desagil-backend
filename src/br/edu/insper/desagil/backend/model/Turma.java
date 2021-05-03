@@ -2,7 +2,7 @@ package br.edu.insper.desagil.backend.model;
 
 import java.util.List;
 
-import br.edu.insper.desagil.backend.core.FirestoreEntity;
+import br.edu.insper.desagil.backend.firestore.FirestoreEntity;
 
 public class Turma extends FirestoreEntity {
 	private String codigo;
