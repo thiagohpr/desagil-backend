@@ -53,13 +53,13 @@ public class Dispatcher extends AbstractHandler {
 				args.put(key, values[0]);
 			}
 
-		    String line;
+			String line;
 			BufferedReader reader = request.getReader();
-		    StringBuilder builder = new StringBuilder();
-		    while ((line = reader.readLine()) != null) {
-		    	builder.append(line);
-		        builder.append('\n');
-		    }
+			StringBuilder builder = new StringBuilder();
+			while ((line = reader.readLine()) != null) {
+				builder.append(line);
+				builder.append('\n');
+			}
 			String requestBody = builder.toString();
 
 			String method = request.getMethod();
@@ -81,10 +81,14 @@ public class Dispatcher extends AbstractHandler {
 			}
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setContentType("application/json");
-		}
-		catch (APIException exception) {
+		} catch (APIException exception) {
 			responseBody = exception.getMessage();
 			response.setStatus(exception.getStatus());
+			response.setContentType("text/plain");
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			responseBody = "Internal server error";
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.setContentType("text/plain");
 		}
 		PrintWriter writer = response.getWriter();
