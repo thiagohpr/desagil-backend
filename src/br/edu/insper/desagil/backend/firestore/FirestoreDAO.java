@@ -19,6 +19,7 @@ import com.google.firebase.cloud.FirestoreClient;
 
 import br.edu.insper.desagil.backend.core.DAO;
 import br.edu.insper.desagil.backend.core.exception.APIException;
+import br.edu.insper.desagil.backend.core.exception.BadRequestException;
 import br.edu.insper.desagil.backend.core.exception.DBException;
 import br.edu.insper.desagil.backend.core.exception.FirestoreExecutionException;
 import br.edu.insper.desagil.backend.core.exception.FirestoreInterruptedException;
@@ -87,7 +88,12 @@ public class FirestoreDAO<T extends FirestoreEntity> implements DAO<String, T> {
 	public Date create(T value) throws DBException, APIException {
 		WriteResult result;
 		try {
-			result = collection.document(value.key()).set(value).get();
+			String key = value.key();
+			DocumentReference document = collection.document(key);
+			if (document.get().get().exists()) {
+				throw new BadRequestException("Key " + key + " already exists");
+			}
+			result = document.set(value).get();
 		} catch (ExecutionException exception) {
 			throw new FirestoreExecutionException(exception);
 		} catch (InterruptedException exception) {
