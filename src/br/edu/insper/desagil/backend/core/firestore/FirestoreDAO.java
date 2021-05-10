@@ -1,4 +1,4 @@
-package br.edu.insper.desagil.backend.firestore;
+package br.edu.insper.desagil.backend.core.firestore;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

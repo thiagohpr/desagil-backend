@@ -1,4 +1,4 @@
-package br.edu.insper.desagil.backend.firestore;
+package br.edu.insper.desagil.backend.core.firestore;
 
 import br.edu.insper.desagil.backend.core.Entity;
 
