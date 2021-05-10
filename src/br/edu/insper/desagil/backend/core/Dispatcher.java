@@ -76,6 +76,9 @@ public class Dispatcher extends AbstractHandler {
 			case "DELETE":
 				responseBody = context.doDelete(args);
 				break;
+			case "OPTIONS":
+				responseBody = "";
+				break;
 			default:
 				throw new APIException(HttpServletResponse.SC_METHOD_NOT_ALLOWED, method + " not supported");
 			}
@@ -91,6 +94,9 @@ public class Dispatcher extends AbstractHandler {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.setContentType("text/plain");
 		}
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Methods", "*");
+		response.addHeader("Access-Control-Allow-Headers", "*");
 		PrintWriter writer = response.getWriter();
 		writer.println(responseBody);
 		baseRequest.setHandled(true);
