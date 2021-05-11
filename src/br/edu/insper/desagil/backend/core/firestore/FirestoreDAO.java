@@ -21,9 +21,9 @@ import br.edu.insper.desagil.backend.core.DAO;
 import br.edu.insper.desagil.backend.core.exception.APIException;
 import br.edu.insper.desagil.backend.core.exception.BadRequestException;
 import br.edu.insper.desagil.backend.core.exception.DBException;
-import br.edu.insper.desagil.backend.core.exception.FirestoreExecutionException;
-import br.edu.insper.desagil.backend.core.exception.FirestoreInterruptedException;
 import br.edu.insper.desagil.backend.core.exception.NotFoundException;
+import br.edu.insper.desagil.backend.core.firestore.exception.FirestoreExecutionException;
+import br.edu.insper.desagil.backend.core.firestore.exception.FirestoreInterruptedException;
 
 public class FirestoreDAO<T extends FirestoreEntity> implements DAO<String, T> {
 	private final Class<T> klass;
