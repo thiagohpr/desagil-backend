@@ -13,6 +13,8 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.reflections.Reflections;
 
 import br.edu.insper.desagil.backend.core.exception.APIException;
+import br.edu.insper.desagil.backend.core.exception.BadRequestException;
+import br.edu.insper.desagil.backend.core.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -37,7 +39,7 @@ public class Dispatcher extends AbstractHandler {
 			String uri = request.getRequestURI();
 			Context context = contexts.get(uri);
 			if (context == null) {
-				throw new APIException(HttpServletResponse.SC_NOT_FOUND, "Endpoint " + uri + " not found");
+				throw new NotFoundException("Endpoint " + uri + " not found");
 			}
 
 			Map<String, String> args = new HashMap<>();
@@ -45,10 +47,10 @@ public class Dispatcher extends AbstractHandler {
 			for (String key : map.keySet()) {
 				String[] values = map.get(key);
 				if (values.length < 1) {
-					throw new APIException(HttpServletResponse.SC_BAD_REQUEST, "Key " + key + " has no value");
+					throw new BadRequestException("Key " + key + " has no value");
 				}
 				if (values.length > 1) {
-					throw new APIException(HttpServletResponse.SC_BAD_REQUEST, "Key " + key + " has multiple values");
+					throw new BadRequestException("Key " + key + " has multiple values");
 				}
 				args.put(key, values[0]);
 			}
@@ -80,7 +82,7 @@ public class Dispatcher extends AbstractHandler {
 				responseBody = "";
 				break;
 			default:
-				throw new APIException(HttpServletResponse.SC_METHOD_NOT_ALLOWED, method + " not supported");
+				throw new APIException(HttpServletResponse.SC_METHOD_NOT_ALLOWED, method.toUpperCase() + " not supported");
 			}
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setContentType("application/json");
