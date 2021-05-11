@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.edu.insper.desagil.backend.core.Endpoint;
-import br.edu.insper.desagil.backend.core.exception.APIException;
-import br.edu.insper.desagil.backend.core.exception.DBException;
-import br.edu.insper.desagil.backend.core.exception.DatabaseRequestException;
 import br.edu.insper.desagil.backend.model.Aluno;
 import br.edu.insper.desagil.backend.model.db.AlunoDAO;
 
@@ -17,56 +14,35 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 	}
 
 	@Override
-	public Aluno get(Map<String, String> args) throws APIException {
-		Aluno aluno;
+	public Aluno get(Map<String, String> args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		String key = extract(args, "matricula");
-		try {
-			aluno = dao.retrieve(key);
-		} catch (DBException exception) {
-			throw new DatabaseRequestException(exception);
-		}
-		return aluno;
+		String key = require(args, "matricula");
+		return dao.retrieve(key);
 	}
 
 	@Override
-	public Map<String, String> post(Map<String, String> args, Aluno aluno) throws APIException {
-		Date date;
+	public Map<String, String> post(Map<String, String> args, Aluno aluno) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		try {
-			date = dao.create(aluno);
-		} catch (DBException exception) {
-			throw new DatabaseRequestException(exception);
-		}
+		Date date = dao.create(aluno);
 		Map<String, String> body = new HashMap<>();
 		body.put("date", date.toString());
 		return body;
 	}
 
 	@Override
-	public Map<String, String> put(Map<String, String> args, Aluno aluno) throws APIException {
-		Date date;
+	public Map<String, String> put(Map<String, String> args, Aluno aluno) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		try {
-			date = dao.update(aluno);
-		} catch (DBException exception) {
-			throw new DatabaseRequestException(exception);
-		}
+		Date date = dao.update(aluno);
 		Map<String, String> body = new HashMap<>();
 		body.put("date", date.toString());
 		return body;
 	}
 
 	@Override
-	public Map<String, String> delete(Map<String, String> args) throws APIException {
-		Date date;
+	public Map<String, String> delete(Map<String, String> args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		String key = extract(args, "matricula");
-		try {
-			date = dao.delete(key);
-		} catch (DBException exception) {
-			throw new DatabaseRequestException(exception);
-		}
+		String key = require(args, "matricula");
+		Date date = dao.delete(key);
 		Map<String, String> body = new HashMap<>();
 		body.put("date", date.toString());
 		return body;

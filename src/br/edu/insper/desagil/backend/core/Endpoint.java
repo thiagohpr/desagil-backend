@@ -7,7 +7,6 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import br.edu.insper.desagil.backend.core.exception.APIException;
 import br.edu.insper.desagil.backend.core.exception.BadRequestException;
 import br.edu.insper.desagil.backend.core.exception.MethodNotImplementedException;
 import br.edu.insper.desagil.backend.core.exception.NotFoundException;
@@ -27,7 +26,7 @@ public abstract class Endpoint<T> extends Context {
 		this.gson = new Gson();
 	}
 
-	protected String extract(Map<String, String> args, String key) throws APIException {
+	protected String require(Map<String, String> args, String key) throws NotFoundException {
 		String value = args.get(key);
 		if (value == null) {
 			throw new NotFoundException("Key " + key + " not found");
@@ -36,12 +35,12 @@ public abstract class Endpoint<T> extends Context {
 	}
 
 	@Override
-	public final String doGet(Map<String, String> args) throws APIException {
+	public final String doGet(Map<String, String> args) throws Exception {
 		return gson.toJson(get(args));
 	}
 
 	@Override
-	public final String doPost(Map<String, String> args, String body) throws APIException {
+	public final String doPost(Map<String, String> args, String body) throws Exception {
 		T value;
 		try {
 			value = gson.fromJson(body, klass);
@@ -55,7 +54,7 @@ public abstract class Endpoint<T> extends Context {
 	}
 
 	@Override
-	public final String doPut(Map<String, String> args, String body) throws APIException {
+	public final String doPut(Map<String, String> args, String body) throws Exception {
 		T value;
 		try {
 			value = gson.fromJson(body, klass);
@@ -69,23 +68,23 @@ public abstract class Endpoint<T> extends Context {
 	}
 
 	@Override
-	public final String doDelete(Map<String, String> args) throws APIException {
+	public final String doDelete(Map<String, String> args) throws Exception {
 		return gson.toJson(delete(args));
 	}
 
-	protected T get(Map<String, String> args) throws APIException {
+	protected T get(Map<String, String> args) throws Exception {
 		throw new MethodNotImplementedException("get");
 	}
 
-	protected Map<String, String> post(Map<String, String> args, T body) throws APIException {
+	protected Map<String, String> post(Map<String, String> args, T body) throws Exception {
 		throw new MethodNotImplementedException("post");
 	}
 
-	protected Map<String, String> put(Map<String, String> args, T body) throws APIException {
+	protected Map<String, String> put(Map<String, String> args, T body) throws Exception {
 		throw new MethodNotImplementedException("put");
 	}
 
-	protected Map<String, String> delete(Map<String, String> args) throws APIException {
+	protected Map<String, String> delete(Map<String, String> args) throws Exception {
 		throw new MethodNotImplementedException("delete");
 	}
 }
