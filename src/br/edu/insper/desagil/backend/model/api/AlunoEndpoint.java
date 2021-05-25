@@ -2,6 +2,7 @@ package br.edu.insper.desagil.backend.model.api;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import br.edu.insper.desagil.backend.core.Endpoint;
@@ -27,6 +28,20 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 			throw new DatabaseRequestException(exception);
 		}
 		return aluno;
+	}
+
+	@Override
+	public List<Aluno> getList(Map<String, String> args) throws APIException {
+		List<Aluno> alunos;
+		AlunoDAO dao = new AlunoDAO();
+		String arg = extract(args, "matriculas");
+		List<String> keys = split(arg, ",");
+		try {
+			alunos = dao.retrieve(keys);
+		} catch (DBException exception) {
+			throw new DatabaseRequestException(exception);
+		}
+		return alunos;
 	}
 
 	@Override
