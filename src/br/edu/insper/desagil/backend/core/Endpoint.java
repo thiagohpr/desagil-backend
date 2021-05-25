@@ -12,7 +12,6 @@ import com.google.gson.JsonSyntaxException;
 import br.edu.insper.desagil.backend.core.exception.APIException;
 import br.edu.insper.desagil.backend.core.exception.BadRequestException;
 import br.edu.insper.desagil.backend.core.exception.MethodNotImplementedException;
-import br.edu.insper.desagil.backend.core.exception.NotFoundException;
 
 public abstract class Endpoint<T> extends Context {
 	private final Class<T> klass;
@@ -32,7 +31,7 @@ public abstract class Endpoint<T> extends Context {
 	protected String extract(Map<String, String> args, String name) throws APIException {
 		String value = args.get(name);
 		if (value == null) {
-			throw new NotFoundException("Arg " + name + " not found");
+			throw new BadRequestException("Arg " + name + " not found");
 		}
 		return value;
 	}
