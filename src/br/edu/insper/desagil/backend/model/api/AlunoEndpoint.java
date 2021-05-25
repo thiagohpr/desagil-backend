@@ -2,6 +2,7 @@ package br.edu.insper.desagil.backend.model.api;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import br.edu.insper.desagil.backend.core.Endpoint;
@@ -18,6 +19,14 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 		AlunoDAO dao = new AlunoDAO();
 		String key = require(args, "matricula");
 		return dao.retrieve(key);
+	}
+
+	@Override
+	public List<Aluno> getList(Map<String, String> args) throws Exception {
+		AlunoDAO dao = new AlunoDAO();
+		String arg = require(args, "matriculas");
+		List<String> keys = split(arg, ",");
+		return dao.retrieve(keys);
 	}
 
 	@Override
