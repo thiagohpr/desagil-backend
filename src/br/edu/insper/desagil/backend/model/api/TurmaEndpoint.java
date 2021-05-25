@@ -27,7 +27,7 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 	@Override
 	public Turma get(Map<String, String> args) throws Exception {
 		TurmaDAO dao = new TurmaDAO();
-		String key = require(args, "codigo");
+		String key = require(args, "key");
 		return dao.retrieve(key);
 	}
 
@@ -38,6 +38,7 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 		Date date = dao.create(turma);
 		Map<String, String> body = new HashMap<>();
 		body.put("date", date.toString());
+		body.put("key", turma.getKey());
 		return body;
 	}
 
@@ -54,7 +55,7 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 	@Override
 	public Map<String, String> delete(Map<String, String> args) throws Exception {
 		TurmaDAO dao = new TurmaDAO();
-		String key = require(args, "codigo");
+		String key = require(args, "key");
 		Date date = dao.delete(key);
 		Map<String, String> body = new HashMap<>();
 		body.put("date", date.toString());
