@@ -49,15 +49,18 @@ public class Dispatcher extends AbstractHandler {
 
 			Map<String, String> args = new HashMap<>();
 			Map<String, String[]> map = request.getParameterMap();
-			for (String key : map.keySet()) {
-				String[] values = map.get(key);
-				if (values.length < 1) {
-					throw new BadRequestException("Key " + key + " has no value");
+			for (String name : map.keySet()) {
+				if (name.isEmpty()) {
+					throw new BadRequestException("Empty args not allowed");
 				}
-				if (values.length > 1) {
-					throw new BadRequestException("Key " + key + " has multiple values");
+				String[] words = map.get(name);
+				if (words.length < 1) {
+					throw new BadRequestException("Arg " + name + " has no value");
 				}
-				args.put(key, values[0]);
+				if (words.length > 1) {
+					throw new BadRequestException("Arg " + name + " has multiple values");
+				}
+				args.put(name, words[0]);
 			}
 
 			String line;
