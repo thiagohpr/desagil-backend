@@ -86,20 +86,26 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 
 	@Override
 	public Date create(T value) throws DBException, APIException {
-		WriteResult result;
+		Date date;
 		try {
-			String key = value.key();
-			DocumentReference document = collection.document(key);
-			if (document.get().get().exists()) {
-				throw new BadRequestException("Key " + key + " already exists");
+			if (value instanceof FirestoreAutokeyEntity) {
+				DocumentReference document = collection.add(value).get();
+				((FirestoreAutokeyEntity) value).setKey(document.getId());
+				date = new Date();
+			} else {
+				String key = value.key();
+				DocumentReference document = collection.document(key);
+				if (document.get().get().exists()) {
+					throw new BadRequestException("Key " + key + " already exists");
+				}
+				date = document.set(value).get().getUpdateTime().toDate();
 			}
-			result = document.set(value).get();
 		} catch (ExecutionException exception) {
 			throw new FirestoreExecutionException(exception);
 		} catch (InterruptedException exception) {
 			throw new FirestoreInterruptedException(exception);
 		}
-		return result.getUpdateTime().toDate();
+		return date;
 	}
 
 	@Override
