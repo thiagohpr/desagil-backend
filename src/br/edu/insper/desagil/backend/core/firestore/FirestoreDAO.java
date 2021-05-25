@@ -30,7 +30,7 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 	private final CollectionReference collection;
 
 	@SuppressWarnings("unchecked")
-	public FirestoreDAO(String path) throws APIException {
+	public FirestoreDAO(String path) throws DBException, APIException {
 		ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
 		Type[] types = type.getActualTypeArguments();
 		this.klass = (Class<T>) types[0];
@@ -39,7 +39,7 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 		try {
 			this.collection = firestore.collection(path);
 		} catch (IllegalArgumentException exception) {
-			throw new NotFoundException("Collection " + path + " not found");
+			throw new DBException("Firestore access failed", exception);
 		}
 	}
 
@@ -60,6 +60,12 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 	}
 
 	public boolean exists(String key) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		DocumentSnapshot document;
 		try {
 			document = collection.document(key).get().get();
@@ -72,8 +78,18 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 	}
 
 	public boolean exists(List<String> keys) throws DBException, APIException {
+		if (keys.isEmpty()) {
+			throw new BadRequestException("List of keys cannot be empty");
+		}
 		QuerySnapshot documents;
-		Query query = collection.whereIn(FieldPath.documentId(), keys);
+		Query query;
+		try {
+			query = collection.whereIn(FieldPath.documentId(), keys);
+		} catch(NullPointerException exception) {
+			throw new BadRequestException("Key cannot be null");
+		} catch(IllegalArgumentException exception) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		try {
 			documents = query.get().get();
 		} catch (ExecutionException exception) {
@@ -86,30 +102,45 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 
 	@Override
 	public Date create(T value) throws DBException, APIException {
-		Date date;
+		if (value == null) {
+			throw new BadRequestException("Value cannot be null");
+		}
+		WriteResult result;
 		try {
+			DocumentReference document;
 			if (value instanceof FirestoreAutokeyEntity) {
-				DocumentReference document = collection.add(value).get();
+				document = collection.add(value).get();
 				((FirestoreAutokeyEntity) value).setKey(document.getId());
-				date = new Date();
 			} else {
 				String key = value.key();
-				DocumentReference document = collection.document(key);
+				if (key == null) {
+					throw new BadRequestException("Key cannot be null");
+				}
+				if (key.isEmpty()) {
+					throw new BadRequestException("Key cannot be empty");
+				}
+				document = collection.document(key);
 				if (document.get().get().exists()) {
 					throw new BadRequestException("Key " + key + " already exists");
 				}
-				date = document.set(value).get().getUpdateTime().toDate();
 			}
+			result = document.set(value).get();
 		} catch (ExecutionException exception) {
 			throw new FirestoreExecutionException(exception);
 		} catch (InterruptedException exception) {
 			throw new FirestoreInterruptedException(exception);
 		}
-		return date;
+		return result.getUpdateTime().toDate();
 	}
 
 	@Override
 	public T retrieve(String key) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		DocumentSnapshot document;
 		try {
 			document = collection.document(key).get().get();
@@ -126,36 +157,86 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 
 	@Override
 	public List<T> retrieve(List<String> keys) throws DBException, APIException {
-		return execute(collection.whereIn(FieldPath.documentId(), keys));
+		if (keys.isEmpty()) {
+			throw new BadRequestException("List of keys cannot be empty");
+		}
+		Query query;
+		try {
+			query = collection.whereIn(FieldPath.documentId(), keys);
+		} catch(NullPointerException exception) {
+			throw new BadRequestException("Key cannot be null");
+		} catch(IllegalArgumentException exception) {
+			throw new BadRequestException("Key cannot be empty");
+		}
+		return execute(query);
 	}
 
 	@Override
 	public List<T> retrieveLt(String key, Object value) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		return execute(collection.whereLessThan(key, value));
 	}
 
 	@Override
 	public List<T> retrieveLeq(String key, Object value) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		return execute(collection.whereLessThanOrEqualTo(key, value));
 	}
 
 	@Override
 	public List<T> retrieveEq(String key, Object value) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		return execute(collection.whereEqualTo(key, value));
 	}
 
 	@Override
 	public List<T> retrieveGt(String key, Object value) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		return execute(collection.whereGreaterThan(key, value));
 	}
 
 	@Override
 	public List<T> retrieveGeq(String key, Object value) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		return execute(collection.whereGreaterThanOrEqualTo(key, value));
 	}
 
 	@Override
 	public List<T> retrieveIn(String key, List<Object> values) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
+		if (values.isEmpty()) {
+			throw new BadRequestException("List of values cannot be empty");
+		}
 		return execute(collection.whereIn(key, values));
 	}
 
@@ -178,8 +259,17 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 
 	@Override
 	public Date update(T value) throws DBException, APIException {
-		WriteResult result;
+		if (value == null) {
+			throw new BadRequestException("Value cannot be null");
+		}
 		String key = value.key();
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
+		WriteResult result;
 		try {
 			DocumentSnapshot document = collection.document(key).get().get();
 			if (!document.exists()) {
@@ -196,6 +286,12 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 
 	@Override
 	public Date delete(String key) throws DBException, APIException {
+		if (key == null) {
+			throw new BadRequestException("Key cannot be null");
+		}
+		if (key.isEmpty()) {
+			throw new BadRequestException("Key cannot be empty");
+		}
 		WriteResult result;
 		try {
 			DocumentSnapshot document = collection.document(key).get().get();
