@@ -29,7 +29,7 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 	public Turma get(Map<String, String> args) throws APIException {
 		Turma turma;
 		TurmaDAO dao = new TurmaDAO();
-		String key = extract(args, "codigo");
+		String key = extract(args, "key");
 		try {
 			turma = dao.retrieve(key);
 		} catch (DBException exception) {
@@ -50,6 +50,7 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 		}
 		Map<String, String> body = new HashMap<>();
 		body.put("date", date.toString());
+		body.put("key", turma.getKey());
 		return body;
 	}
 
@@ -72,7 +73,7 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 	public Map<String, String> delete(Map<String, String> args) throws APIException {
 		Date date;
 		TurmaDAO dao = new TurmaDAO();
-		String key = extract(args, "codigo");
+		String key = extract(args, "key");
 		try {
 			date = dao.delete(key);
 		} catch (DBException exception) {

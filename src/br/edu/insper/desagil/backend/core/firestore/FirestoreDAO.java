@@ -30,7 +30,7 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 	private final CollectionReference collection;
 
 	@SuppressWarnings("unchecked")
-	public FirestoreDAO(String path) throws DBException, APIException {
+	public FirestoreDAO(String path) throws APIException {
 		ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
 		Type[] types = type.getActualTypeArguments();
 		this.klass = (Class<T>) types[0];
@@ -39,7 +39,7 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 		try {
 			this.collection = firestore.collection(path);
 		} catch (IllegalArgumentException exception) {
-			throw new DBException("Firestore access failed", exception);
+			throw new BadRequestException("Firestore access failed:" + exception.getMessage());
 		}
 	}
 
