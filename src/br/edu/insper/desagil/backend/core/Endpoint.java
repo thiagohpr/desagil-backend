@@ -2,6 +2,7 @@ package br.edu.insper.desagil.backend.core;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -26,17 +27,23 @@ public abstract class Endpoint<T> extends Context {
 		this.gson = new Gson();
 	}
 
-	protected String require(Map<String, String> args, String key) throws NotFoundException {
-		String value = args.get(key);
+	protected String require(Map<String, String> args, String name) throws NotFoundException {
+		String value = args.get(name);
 		if (value == null) {
-			throw new NotFoundException("Key " + key + " not found");
+			throw new NotFoundException("Arg " + name + " not found");
 		}
 		return value;
 	}
 
 	@Override
-	public final String doGet(Map<String, String> args) throws Exception {
-		return gson.toJson(get(args));
+	public final String doGet(Map<String, String> args, boolean isList) throws Exception {
+		String value;
+		if (isList) {
+			value = gson.toJson(getList(args));
+		} else {
+			value = gson.toJson(get(args));
+		}
+		return value;
 	}
 
 	@Override
@@ -73,6 +80,10 @@ public abstract class Endpoint<T> extends Context {
 	}
 
 	protected T get(Map<String, String> args) throws Exception {
+		throw new MethodNotImplementedException("get");
+	}
+
+	protected List<T> getList(Map<String, String> args) throws Exception {
 		throw new MethodNotImplementedException("get");
 	}
 
