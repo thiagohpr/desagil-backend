@@ -37,6 +37,11 @@ public class Dispatcher extends AbstractHandler {
 		String responseBody;
 		try {
 			String uri = request.getRequestURI();
+			int length = uri.length();
+			boolean isList = length > 5 && uri.endsWith("/list");
+			if (isList) {
+				uri = uri.substring(0, length - 5);
+			}
 			Context context = contexts.get(uri);
 			if (context == null) {
 				throw new NotFoundException("Endpoint " + uri + " not found");
@@ -67,7 +72,7 @@ public class Dispatcher extends AbstractHandler {
 			String method = request.getMethod();
 			switch (method) {
 			case "GET":
-				responseBody = context.doGet(args);
+				responseBody = context.doGet(args, isList);
 				break;
 			case "POST":
 				responseBody = context.doPost(args, requestBody);
