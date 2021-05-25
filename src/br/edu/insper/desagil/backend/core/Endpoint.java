@@ -2,6 +2,7 @@ package br.edu.insper.desagil.backend.core;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,10 @@ public abstract class Endpoint<T> extends Context {
 			throw new NotFoundException("Arg " + name + " not found");
 		}
 		return value;
+	}
+
+	protected List<String> split(String arg, String regex) {
+		return Arrays.asList(arg.split(regex));
 	}
 
 	@Override
