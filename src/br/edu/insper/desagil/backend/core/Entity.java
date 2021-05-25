@@ -1,5 +1,5 @@
 package br.edu.insper.desagil.backend.core;
 
-public interface Entity<K> {
-	K key();
+public abstract class Entity<K> {
+	public abstract K key();
 }
