@@ -8,6 +8,6 @@ public class FirestoreExecutionException extends DBException {
 	private static final long serialVersionUID = 3825564659925631367L;
 
 	public FirestoreExecutionException(ExecutionException exception) {
-		super("Execution failed", exception);
+		super("Firestore execution failed", exception);
 	}
 }
