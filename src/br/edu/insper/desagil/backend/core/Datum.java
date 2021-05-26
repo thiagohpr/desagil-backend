@@ -1,5 +1,5 @@
 package br.edu.insper.desagil.backend.core;
 
-public abstract class Entity<K> {
+public abstract class Datum<K> {
 	public abstract K key();
 }

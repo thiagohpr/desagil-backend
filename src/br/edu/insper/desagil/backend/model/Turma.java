@@ -2,9 +2,9 @@ package br.edu.insper.desagil.backend.model;
 
 import java.util.List;
 
-import br.edu.insper.desagil.backend.core.firestore.FirestoreAutokeyEntity;
+import br.edu.insper.desagil.backend.core.firestore.AutokeyFirestoreDatum;
 
-public class Turma extends FirestoreAutokeyEntity {
+public class Turma extends AutokeyFirestoreDatum {
 	private List<String> alunos;
 
 	public List<String> getAlunos() {

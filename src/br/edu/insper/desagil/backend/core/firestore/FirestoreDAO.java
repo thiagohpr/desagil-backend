@@ -26,7 +26,7 @@ import br.edu.insper.desagil.backend.core.exception.NotFoundException;
 import br.edu.insper.desagil.backend.core.firestore.exception.FirestoreExecutionException;
 import br.edu.insper.desagil.backend.core.firestore.exception.FirestoreInterruptedException;
 
-public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<String, T> {
+public abstract class FirestoreDAO<T extends FirestoreDatum> implements DAO<String, T> {
 	private final Class<T> klass;
 	private final Firestore firestore;
 	private final CollectionReference collection;
@@ -118,9 +118,9 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 		WriteResult result;
 		try {
 			DocumentReference document;
-			if (value instanceof FirestoreAutokeyEntity) {
+			if (value instanceof AutokeyFirestoreDatum) {
 				document = collection.add(value).get();
-				((FirestoreAutokeyEntity) value).setKey(document.getId());
+				((AutokeyFirestoreDatum) value).setKey(document.getId());
 			} else {
 				String key = value.key();
 				if (key == null) {
