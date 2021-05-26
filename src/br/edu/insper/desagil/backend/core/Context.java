@@ -18,5 +18,5 @@ public abstract class Context {
 	public abstract String doGet(Map<String, String> args, boolean isList) throws APIException;
 	public abstract String doPost(Map<String, String> args, String body) throws APIException;
 	public abstract String doPut(Map<String, String> args, String body) throws APIException;
-	public abstract String doDelete(Map<String, String> args) throws APIException;
+	public abstract String doDelete(Map<String, String> args, boolean isList) throws APIException;
 }
