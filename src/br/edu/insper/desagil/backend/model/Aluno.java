@@ -8,15 +8,6 @@ public class Aluno extends FirestoreEntity {
 	private boolean regular;
 	private double cr;
 
-	public Aluno() {
-	}
-	public Aluno(int matricula, String nome, boolean regular, double cr) {
-		this.matricula = matricula;
-		this.nome = nome;
-		this.regular = regular;
-		this.cr = cr;
-	}
-
 	public int getMatricula() {
 		return matricula;
 	}

@@ -7,12 +7,6 @@ import br.edu.insper.desagil.backend.core.firestore.FirestoreAutokeyEntity;
 public class Turma extends FirestoreAutokeyEntity {
 	private List<String> alunos;
 
-	public Turma() {
-	}
-	public Turma(List<String> alunos) {
-		this.alunos = alunos;
-	}
-
 	public List<String> getAlunos() {
 		return alunos;
 	}
