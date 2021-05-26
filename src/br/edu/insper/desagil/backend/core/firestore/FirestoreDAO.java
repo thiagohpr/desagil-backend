@@ -32,15 +32,15 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 	private final CollectionReference collection;
 
 	@SuppressWarnings("unchecked")
-	public FirestoreDAO(String path, boolean isTest) throws APIException {
+	public FirestoreDAO(String path, String prefix) throws APIException {
 		ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
 		Type[] types = type.getActualTypeArguments();
 		this.klass = (Class<T>) types[0];
 
 		this.firestore = FirestoreClient.getFirestore();
 
-		if (isTest) {
-			path = "test/" + path;
+		if (prefix != null) {
+			path = prefix + "/" + path;
 		}
 		try {
 			this.collection = this.firestore.collection(path);
@@ -50,7 +50,7 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 	}
 
 	public FirestoreDAO(String path) throws APIException {
-		this(path, false);
+		this(path, null);
 	}
 
 	private final List<T> execute(Query query) throws DBException, APIException {
