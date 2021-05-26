@@ -2,6 +2,7 @@ package br.edu.insper.desagil.backend.model.api;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,15 +59,19 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 	}
 
 	@Override
-	public Map<String, String> deleteList(Map<String, String> args) throws APIException {
+	public Map<String, String> deleteList(Map<String, String> args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		String arg = extract(args, "matriculas");
+		String arg = require(args, "matriculas");
 		List<String> keys = split(arg, ",");
-		try {
-			dao.delete(keys);
-		} catch (DBException exception) {
-			throw new DatabaseRequestException(exception);
+		List<Date> dates = dao.delete(keys);
+		Iterator<String> ikey = keys.iterator();
+		Iterator<Date> idate = dates.iterator();
+		Map<String, String> body = new HashMap<>();
+		while (ikey.hasNext() && idate.hasNext()) {
+			String key = ikey.next();
+			Date date = idate.next();
+			body.put(key, date.toString());
 		}
-		return null;
+		return body;
 	}
 }
