@@ -84,7 +84,7 @@ public class Dispatcher extends AbstractHandler {
 				responseBody = context.doPut(args, requestBody);
 				break;
 			case "DELETE":
-				responseBody = context.doDelete(args);
+				responseBody = context.doDelete(args, isList);
 				break;
 			case "OPTIONS":
 				responseBody = "";

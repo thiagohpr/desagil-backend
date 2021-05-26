@@ -81,8 +81,14 @@ public abstract class Endpoint<T> extends Context {
 	}
 
 	@Override
-	public final String doDelete(Map<String, String> args) throws APIException {
-		return gson.toJson(delete(args));
+	public final String doDelete(Map<String, String> args, boolean isList) throws APIException {
+		String value;
+		if (isList) {
+			value = gson.toJson(deleteList(args));
+		} else {
+			value = gson.toJson(delete(args));
+		}
+		return value;
 	}
 
 	protected T get(Map<String, String> args) throws APIException {
@@ -102,6 +108,10 @@ public abstract class Endpoint<T> extends Context {
 	}
 
 	protected Map<String, String> delete(Map<String, String> args) throws APIException {
+		throw new MethodNotImplementedException("delete");
+	}
+
+	protected Map<String, String> deleteList(Map<String, String> args) throws APIException {
 		throw new MethodNotImplementedException("delete");
 	}
 }
