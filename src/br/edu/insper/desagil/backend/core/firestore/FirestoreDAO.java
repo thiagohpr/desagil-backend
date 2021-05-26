@@ -39,7 +39,7 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 		try {
 			this.collection = firestore.collection(path);
 		} catch (IllegalArgumentException exception) {
-			throw new DBException("Firestore access failed", exception);
+			throw new DBException("Firestore connection failed", exception);
 		}
 	}
 
@@ -54,7 +54,13 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 			throw new FirestoreInterruptedException(exception);
 		}
 		for (DocumentSnapshot document : documents) {
-			values.add(document.toObject(klass));
+			T value;
+			try {
+				value = document.toObject(klass);
+			} catch (RuntimeException exception) {
+				throw new DBException("Firestore deserialization failed", exception);
+			}
+			values.add(value);
 		}
 		return values;
 	}
@@ -152,7 +158,13 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 		if (!document.exists()) {
 			throw new NotFoundException("Key " + key + " not found");
 		}
-		return document.toObject(klass);
+		T value;
+		try {
+			value = document.toObject(klass);
+		} catch (RuntimeException exception) {
+			throw new DBException("Firestore deserialization failed", exception);
+		}
+		return value;
 	}
 
 	@Override
