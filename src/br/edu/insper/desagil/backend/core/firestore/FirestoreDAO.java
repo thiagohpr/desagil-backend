@@ -40,7 +40,7 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 		this.firestore = FirestoreClient.getFirestore();
 
 		if (isTest) {
-			path = "test/" + path;
+			path = "test_" + path;
 		}
 		try {
 			this.collection = this.firestore.collection(path);
