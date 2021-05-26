@@ -32,33 +32,33 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 	}
 
 	@Override
-	public Map<String, String> post(Map<String, String> args, Turma turma) throws Exception {
-		TurmaDAO dao = new TurmaDAO();
+	public Map<String, Object> post(Map<String, String> args, Turma turma) throws Exception {
 		check(turma);
+		TurmaDAO dao = new TurmaDAO();
 		Date date = dao.create(turma);
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		body.put("key", turma.getKey());
-		return body;
+		Map<String, Object> response = new HashMap<>();
+		response.put("date", date);
+		response.put("key", turma.getKey());
+		return response;
 	}
 
 	@Override
-	public Map<String, String> put(Map<String, String> args, Turma turma) throws Exception {
-		TurmaDAO dao = new TurmaDAO();
+	public Map<String, Object> put(Map<String, String> args, Turma turma) throws Exception {
 		check(turma);
+		TurmaDAO dao = new TurmaDAO();
 		Date date = dao.update(turma);
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, Object> response = new HashMap<>();
+		response.put("date", date);
+		return response;
 	}
 
 	@Override
-	public Map<String, String> delete(Map<String, String> args) throws Exception {
+	public Map<String, Object> delete(Map<String, String> args) throws Exception {
 		TurmaDAO dao = new TurmaDAO();
 		String key = require(args, "key");
 		Date date = dao.delete(key);
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, Object> response = new HashMap<>();
+		response.put("date", date);
+		return response;
 	}
 }

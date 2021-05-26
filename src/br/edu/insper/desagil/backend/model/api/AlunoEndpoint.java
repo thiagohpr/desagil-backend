@@ -31,46 +31,46 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 	}
 
 	@Override
-	public Map<String, String> post(Map<String, String> args, Aluno aluno) throws Exception {
+	public Map<String, Object> post(Map<String, String> args, Aluno aluno) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
 		Date date = dao.create(aluno);
-		Map<String, String> response = new HashMap<>();
-		response.put("date", date.toString());
+		Map<String, Object> response = new HashMap<>();
+		response.put("date", date);
 		return response;
 	}
 
 	@Override
-	public Map<String, String> put(Map<String, String> args, Aluno aluno) throws Exception {
+	public Map<String, Object> put(Map<String, String> args, Aluno aluno) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
 		Date date = dao.update(aluno);
-		Map<String, String> response = new HashMap<>();
-		response.put("date", date.toString());
+		Map<String, Object> response = new HashMap<>();
+		response.put("date", date);
 		return response;
 	}
 
 	@Override
-	public Map<String, String> delete(Map<String, String> args) throws Exception {
+	public Map<String, Object> delete(Map<String, String> args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
 		String key = require(args, "matricula");
 		Date date = dao.delete(key);
-		Map<String, String> response = new HashMap<>();
-		response.put("date", date.toString());
+		Map<String, Object> response = new HashMap<>();
+		response.put("date", date);
 		return response;
 	}
 
 	@Override
-	public Map<String, String> deleteList(Map<String, String> args) throws Exception {
+	public Map<String, Object> deleteList(Map<String, String> args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
 		String arg = require(args, "matriculas");
 		List<String> keys = split(arg, ",");
 		List<Date> dates = dao.delete(keys);
 		Iterator<String> ikey = keys.iterator();
 		Iterator<Date> idate = dates.iterator();
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 		while (ikey.hasNext() && idate.hasNext()) {
 			String key = ikey.next();
 			Date date = idate.next();
-			response.put(key, date.toString());
+			response.put(key, date);
 		}
 		return response;
 	}

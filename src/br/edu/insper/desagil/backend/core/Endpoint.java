@@ -97,19 +97,19 @@ public abstract class Endpoint<T> extends Context {
 		throw new MethodNotImplementedException("get");
 	}
 
-	protected Map<String, String> post(Map<String, String> args, T body) throws Exception {
+	protected Map<String, Object> post(Map<String, String> args, T body) throws Exception {
 		throw new MethodNotImplementedException("post");
 	}
 
-	protected Map<String, String> put(Map<String, String> args, T body) throws Exception {
+	protected Map<String, Object> put(Map<String, String> args, T body) throws Exception {
 		throw new MethodNotImplementedException("put");
 	}
 
-	protected Map<String, String> delete(Map<String, String> args) throws Exception {
+	protected Map<String, Object> delete(Map<String, String> args) throws Exception {
 		throw new MethodNotImplementedException("delete");
 	}
 
-	protected Map<String, String> deleteList(Map<String, String> args) throws Exception {
+	protected Map<String, Object> deleteList(Map<String, String> args) throws Exception {
 		throw new MethodNotImplementedException("delete");
 	}
 }
