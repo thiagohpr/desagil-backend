@@ -53,9 +53,9 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 		} catch (DBException exception) {
 			throw new DatabaseRequestException(exception);
 		}
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		return response;
 	}
 
 	@Override
@@ -67,9 +67,9 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 		} catch (DBException exception) {
 			throw new DatabaseRequestException(exception);
 		}
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		return response;
 	}
 
 	@Override
@@ -82,9 +82,9 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 		} catch (DBException exception) {
 			throw new DatabaseRequestException(exception);
 		}
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		return response;
 	}
 
 	@Override

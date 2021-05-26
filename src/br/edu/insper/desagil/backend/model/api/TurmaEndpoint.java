@@ -48,10 +48,10 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 		} catch (DBException exception) {
 			throw new DatabaseRequestException(exception);
 		}
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		body.put("key", turma.getKey());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		response.put("key", turma.getKey());
+		return response;
 	}
 
 	@Override
@@ -64,9 +64,9 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 		} catch (DBException exception) {
 			throw new DatabaseRequestException(exception);
 		}
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		return response;
 	}
 
 	@Override
@@ -79,8 +79,8 @@ public class TurmaEndpoint extends Endpoint<Turma> {
 		} catch (DBException exception) {
 			throw new DatabaseRequestException(exception);
 		}
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		return response;
 	}
 }
