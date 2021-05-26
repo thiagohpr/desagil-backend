@@ -56,4 +56,17 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 		body.put("date", date.toString());
 		return body;
 	}
+
+	@Override
+	public Map<String, String> deleteList(Map<String, String> args) throws APIException {
+		AlunoDAO dao = new AlunoDAO();
+		String arg = extract(args, "matriculas");
+		List<String> keys = split(arg, ",");
+		try {
+			dao.delete(keys);
+		} catch (DBException exception) {
+			throw new DatabaseRequestException(exception);
+		}
+		return null;
+	}
 }
