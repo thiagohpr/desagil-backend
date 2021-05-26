@@ -9,6 +9,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import br.edu.insper.desagil.backend.core.exception.APIException;
 import br.edu.insper.desagil.backend.core.exception.BadRequestException;
 import br.edu.insper.desagil.backend.core.exception.MethodNotImplementedException;
 
@@ -79,8 +80,14 @@ public abstract class Endpoint<T> extends Context {
 	}
 
 	@Override
-	public final String doDelete(Map<String, String> args) throws Exception {
-		return gson.toJson(delete(args));
+	public final String doDelete(Map<String, String> args, boolean isList) throws Exception {
+		String value;
+		if (isList) {
+			value = gson.toJson(deleteList(args));
+		} else {
+			value = gson.toJson(delete(args));
+		}
+		return value;
 	}
 
 	protected T get(Map<String, String> args) throws Exception {
@@ -100,6 +107,10 @@ public abstract class Endpoint<T> extends Context {
 	}
 
 	protected Map<String, String> delete(Map<String, String> args) throws Exception {
+		throw new MethodNotImplementedException("delete");
+	}
+
+	protected Map<String, String> deleteList(Map<String, String> args) throws APIException {
 		throw new MethodNotImplementedException("delete");
 	}
 }
