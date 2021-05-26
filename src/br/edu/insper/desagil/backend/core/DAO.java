@@ -21,4 +21,5 @@ public interface DAO<K, V> {
 	List<V> retrieveAll() throws DBException, APIException;
 	Date update(V value) throws DBException, APIException;
 	Date delete(K key) throws DBException, APIException;
+	List<Date> delete(List<K> keys) throws DBException, APIException;
 }
