@@ -12,10 +12,9 @@ import com.google.firebase.FirebaseOptions;
 import br.edu.insper.desagil.backend.core.Dispatcher;
 
 public class Backend {
-	public static void main(String[] args) throws Exception {
-		InetAddress address = InetAddress.getLocalHost();
-		System.out.println(address.getHostAddress());
+	private static final int PORT = 8080;
 
+	public static void main(String[] args) throws Exception {
 		FileInputStream stream = new FileInputStream("firestore.json");
 		FirebaseOptions options = FirebaseOptions.builder()
 			.setCredentials(GoogleCredentials.fromStream(stream))
@@ -24,8 +23,11 @@ public class Backend {
 
 		Dispatcher dispatcher = new Dispatcher();
 
-		Server server = new Server(8080);
+		Server server = new Server(PORT);
 		server.setHandler(dispatcher);
 		server.start();
+
+		String address = InetAddress.getLocalHost().getHostAddress();
+		System.out.println("Waiting on http://" + address + ':' + PORT);
 	}
 }
