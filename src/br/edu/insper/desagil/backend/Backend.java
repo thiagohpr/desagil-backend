@@ -1,6 +1,7 @@
 package br.edu.insper.desagil.backend;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 
 import org.eclipse.jetty.server.Server;
@@ -14,12 +15,16 @@ import br.edu.insper.desagil.backend.core.Dispatcher;
 public class Backend {
 	private static final int PORT = 8080;
 
-	public static void main(String[] args) throws Exception {
+	public static void init() throws IOException {
 		FileInputStream stream = new FileInputStream("firestore.json");
 		FirebaseOptions options = FirebaseOptions.builder()
 			.setCredentials(GoogleCredentials.fromStream(stream))
 			.build();
 		FirebaseApp.initializeApp(options);
+	}
+
+	public static void main(String[] args) throws Exception {
+		init();
 
 		Dispatcher dispatcher = new Dispatcher();
 
