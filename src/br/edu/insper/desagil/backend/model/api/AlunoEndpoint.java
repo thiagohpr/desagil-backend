@@ -34,18 +34,18 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 	public Map<String, String> post(Map<String, String> args, Aluno aluno) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
 		Date date = dao.create(aluno);
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		return response;
 	}
 
 	@Override
 	public Map<String, String> put(Map<String, String> args, Aluno aluno) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
 		Date date = dao.update(aluno);
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		return response;
 	}
 
 	@Override
@@ -53,9 +53,9 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 		AlunoDAO dao = new AlunoDAO();
 		String key = require(args, "matricula");
 		Date date = dao.delete(key);
-		Map<String, String> body = new HashMap<>();
-		body.put("date", date.toString());
-		return body;
+		Map<String, String> response = new HashMap<>();
+		response.put("date", date.toString());
+		return response;
 	}
 
 	@Override
@@ -66,12 +66,12 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 		List<Date> dates = dao.delete(keys);
 		Iterator<String> ikey = keys.iterator();
 		Iterator<Date> idate = dates.iterator();
-		Map<String, String> body = new HashMap<>();
+		Map<String, String> response = new HashMap<>();
 		while (ikey.hasNext() && idate.hasNext()) {
 			String key = ikey.next();
 			Date date = idate.next();
-			body.put(key, date.toString());
+			response.put(key, date.toString());
 		}
-		return body;
+		return response;
 	}
 }
