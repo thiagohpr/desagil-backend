@@ -356,4 +356,25 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 		}
 		return dates;
 	}
+
+	@Override
+	public List<Date> deleteAll() throws DBException, APIException {
+		List<WriteResult> results;
+		try {
+			WriteBatch batch = firestore.batch();
+			for (DocumentReference document : collection.listDocuments()) {
+				batch.delete(document);
+			}
+			results = batch.commit().get();
+		} catch (ExecutionException exception) {
+			throw new FirestoreExecutionException(exception);
+		} catch (InterruptedException exception) {
+			throw new FirestoreInterruptedException(exception);
+		}
+		List<Date> dates = new ArrayList<>();
+		for (WriteResult result: results) {
+			dates.add(result.getUpdateTime().toDate());
+		}
+		return dates;
+	}
 }
