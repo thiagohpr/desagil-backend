@@ -15,8 +15,8 @@ import br.edu.insper.desagil.backend.core.Dispatcher;
 public class Backend {
 	private static final int PORT = 8080;
 
-	public static void init() throws IOException {
-		FileInputStream stream = new FileInputStream("firestore.json");
+	public static void init(String fileName) throws IOException {
+		FileInputStream stream = new FileInputStream(fileName);
 		FirebaseOptions options = FirebaseOptions.builder()
 			.setCredentials(GoogleCredentials.fromStream(stream))
 			.build();
@@ -24,7 +24,7 @@ public class Backend {
 	}
 
 	public static void main(String[] args) throws Exception {
-		init();
+		init("firestore.json");
 
 		Dispatcher dispatcher = new Dispatcher();
 
