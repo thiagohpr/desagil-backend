@@ -2,7 +2,7 @@ package br.edu.insper.desagil.backend.core.exception;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-public class NotFoundException extends APIException {
+public class NotFoundException extends EndpointException {
 	private static final long serialVersionUID = -6564219390891941064L;
 
 	public NotFoundException(String message) {

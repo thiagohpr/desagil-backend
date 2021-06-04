@@ -10,12 +10,12 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
-import br.edu.insper.desagil.backend.core.Dispatcher;
+import br.edu.insper.desagil.backend.core.Handler;
 
-public class Backend {
+public final class Backend {
 	private static final int PORT = 8080;
 
-	public static void init(String fileName) throws IOException {
+	public static final void init(String fileName) throws IOException {
 		FileInputStream stream = new FileInputStream(fileName);
 		FirebaseOptions options = FirebaseOptions.builder()
 			.setCredentials(GoogleCredentials.fromStream(stream))
@@ -23,13 +23,13 @@ public class Backend {
 		FirebaseApp.initializeApp(options);
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static final void main(String[] args) throws Exception {
 		init("firestore.json");
 
-		Dispatcher dispatcher = new Dispatcher();
+		Handler handler = new Handler();
 
 		Server server = new Server(PORT);
-		server.setHandler(dispatcher);
+		server.setHandler(handler);
 		server.start();
 
 		String address = InetAddress.getLocalHost().getHostAddress();

@@ -1,8 +1,8 @@
 package br.edu.insper.desagil.backend.model;
 
-import br.edu.insper.desagil.backend.core.firestore.FirestoreDatum;
+import br.edu.insper.desagil.backend.core.firestore.FirestoreObject;
 
-public class Aluno extends FirestoreDatum {
+public class Aluno extends FirestoreObject {
 	private int matricula;
 	private String nome;
 	private boolean regular;

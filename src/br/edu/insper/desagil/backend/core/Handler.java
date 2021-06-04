@@ -12,23 +12,25 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.reflections.Reflections;
 
-import br.edu.insper.desagil.backend.core.exception.APIException;
 import br.edu.insper.desagil.backend.core.exception.BadRequestException;
+import br.edu.insper.desagil.backend.core.exception.EndpointException;
 import br.edu.insper.desagil.backend.core.exception.NotFoundException;
+import br.edu.insper.desagil.backend.core.exception.NotSupportedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class Dispatcher extends AbstractHandler {
-	private final Map<String, Context> contexts;
+@SuppressWarnings("rawtypes")
+public class Handler extends AbstractHandler {
+	private final Map<String, Endpoint> endpoints;
 
-	public Dispatcher() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+	public Handler() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
 		super();
-		this.contexts = new HashMap<>();
+		this.endpoints = new HashMap<>();
 		Reflections reflections = new Reflections("br.edu.insper.desagil.backend");
-		for (Class<? extends Context> klass : reflections.getSubTypesOf(Endpoint.class)) {
+		for (Class<?> klass : reflections.getSubTypesOf(Endpoint.class)) {
 			Constructor<?> constructor = klass.getConstructor();
-			Context context = (Context) constructor.newInstance();
-			this.contexts.put(context.getURI(), context);
+			Endpoint context = (Endpoint) constructor.newInstance();
+			this.endpoints.put(context.getURI(), context);
 		}
 	}
 
@@ -42,25 +44,29 @@ public class Dispatcher extends AbstractHandler {
 			if (isList) {
 				uri = uri.substring(0, length - 5);
 			}
-			Context context = contexts.get(uri);
-			if (context == null) {
+			Endpoint endpoint = endpoints.get(uri);
+			if (endpoint == null) {
 				throw new NotFoundException("Endpoint " + uri + " not found");
 			}
 
-			Map<String, String> args = new HashMap<>();
 			Map<String, String[]> map = request.getParameterMap();
+			Args args = new Args();
 			for (String name : map.keySet()) {
-				if (name.isEmpty()) {
-					throw new BadRequestException("Empty args not allowed");
+				if (name.isBlank()) {
+					throw new BadRequestException("Blank args not allowed");
 				}
-				String[] words = map.get(name);
-				if (words.length < 1) {
-					throw new BadRequestException("Arg " + name + " has no value");
+				String[] values = map.get(name);
+				if (values.length < 1) {
+					throw new BadRequestException("Arg " + name + " must have a value");
 				}
-				if (words.length > 1) {
-					throw new BadRequestException("Arg " + name + " has multiple values");
+				if (values.length > 1) {
+					throw new BadRequestException("Arg " + name + " must have only one value");
 				}
-				args.put(name, words[0]);
+				String value = values[0];
+				if (value.isBlank()) {
+					throw new BadRequestException("Arg " + name + " cannot be blank");
+				}
+				args.put(name, value);
 			}
 
 			String line;
@@ -75,26 +81,26 @@ public class Dispatcher extends AbstractHandler {
 			String method = request.getMethod();
 			switch (method) {
 			case "GET":
-				responseBody = context.doGet(args, isList);
+				responseBody = endpoint.doGet(args, isList);
 				break;
 			case "POST":
-				responseBody = context.doPost(args, requestBody);
+				responseBody = endpoint.doPost(args, requestBody);
 				break;
 			case "PUT":
-				responseBody = context.doPut(args, requestBody);
+				responseBody = endpoint.doPut(args, requestBody);
 				break;
 			case "DELETE":
-				responseBody = context.doDelete(args, isList);
+				responseBody = endpoint.doDelete(args, isList);
 				break;
 			case "OPTIONS":
 				responseBody = "";
 				break;
 			default:
-				throw new APIException(HttpServletResponse.SC_METHOD_NOT_ALLOWED, method.toUpperCase() + " not supported");
+				throw new NotSupportedException(method);
 			}
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setContentType("application/json");
-		} catch (APIException exception) {
+		} catch (EndpointException exception) {
 			responseBody = exception.getMessage();
 			response.setStatus(exception.getStatus());
 			response.setContentType("text/plain");

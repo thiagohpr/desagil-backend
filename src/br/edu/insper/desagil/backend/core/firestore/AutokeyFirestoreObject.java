@@ -1,6 +1,6 @@
 package br.edu.insper.desagil.backend.core.firestore;
 
-public abstract class AutokeyFirestoreDatum extends FirestoreDatum {
+public abstract class AutokeyFirestoreObject extends FirestoreObject {
 	private String key;
 
 	public final String getKey() {

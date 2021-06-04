@@ -1,12 +1,12 @@
 package br.edu.insper.desagil.backend.model.api;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
+import br.edu.insper.desagil.backend.core.Args;
 import br.edu.insper.desagil.backend.core.Endpoint;
+import br.edu.insper.desagil.backend.core.Result;
 import br.edu.insper.desagil.backend.model.Aluno;
 import br.edu.insper.desagil.backend.model.db.AlunoDAO;
 
@@ -16,62 +16,60 @@ public class AlunoEndpoint extends Endpoint<Aluno> {
 	}
 
 	@Override
-	public Aluno get(Map<String, String> args) throws Exception {
+	public Aluno get(Args args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		String key = require(args, "matricula");
+		String key = args.get("matricula");
 		return dao.retrieve(key);
 	}
 
 	@Override
-	public List<Aluno> getList(Map<String, String> args) throws Exception {
+	public List<Aluno> getList(Args args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		String arg = require(args, "matriculas");
-		List<String> keys = split(arg, ",");
+		List<String> keys = args.split("matriculas", ",");
 		return dao.retrieve(keys);
 	}
 
 	@Override
-	public Map<String, Object> post(Map<String, String> args, Aluno aluno) throws Exception {
+	public Result post(Args args, Aluno aluno) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
 		Date date = dao.create(aluno);
-		Map<String, Object> response = new HashMap<>();
-		response.put("date", date);
-		return response;
+		Result result = new Result();
+		result.put("date", date);
+		return result;
 	}
 
 	@Override
-	public Map<String, Object> put(Map<String, String> args, Aluno aluno) throws Exception {
+	public Result put(Args args, Aluno aluno) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
 		Date date = dao.update(aluno);
-		Map<String, Object> response = new HashMap<>();
-		response.put("date", date);
-		return response;
+		Result result = new Result();
+		result.put("date", date);
+		return result;
 	}
 
 	@Override
-	public Map<String, Object> delete(Map<String, String> args) throws Exception {
+	public Result delete(Args args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		String key = require(args, "matricula");
+		String key = args.get("matricula");
 		Date date = dao.delete(key);
-		Map<String, Object> response = new HashMap<>();
-		response.put("date", date);
-		return response;
+		Result result = new Result();
+		result.put("date", date);
+		return result;
 	}
 
 	@Override
-	public Map<String, Object> deleteList(Map<String, String> args) throws Exception {
+	public Result deleteList(Args args) throws Exception {
 		AlunoDAO dao = new AlunoDAO();
-		String arg = require(args, "matriculas");
-		List<String> keys = split(arg, ",");
+		List<String> keys = args.split("matriculas", ",");
 		List<Date> dates = dao.delete(keys);
 		Iterator<String> ikey = keys.iterator();
 		Iterator<Date> idate = dates.iterator();
-		Map<String, Object> response = new HashMap<>();
+		Result result = new Result();
 		while (ikey.hasNext() && idate.hasNext()) {
 			String key = ikey.next();
 			Date date = idate.next();
-			response.put(key, date);
+			result.put(key, date);
 		}
-		return response;
+		return result;
 	}
 }

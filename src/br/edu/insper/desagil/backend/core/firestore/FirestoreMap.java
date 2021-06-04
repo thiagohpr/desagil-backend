@@ -10,27 +10,31 @@ import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 
-import br.edu.insper.desagil.backend.core.DataMap;
-import br.edu.insper.desagil.backend.core.exception.DBException;
+import br.edu.insper.desagil.backend.core.DatabaseMap;
+import br.edu.insper.desagil.backend.core.exception.DatabaseException;
+import br.edu.insper.desagil.backend.core.exception.InternalException;
 import br.edu.insper.desagil.backend.core.firestore.exception.FirestoreExecutionException;
 import br.edu.insper.desagil.backend.core.firestore.exception.FirestoreInterruptedException;
 
-public class FirestoreDataMap implements DataMap<String> {
+public final class FirestoreMap implements DatabaseMap<String> {
+	private static final String NAME = "maps";
+
 	private DocumentReference document;
 
-	public FirestoreDataMap(String name) throws DBException {
-		Firestore firestore = FirestoreClient.getFirestore();
-
-		CollectionReference collection;
-		try {
-			collection = firestore.collection("datamaps");
-		} catch (IllegalArgumentException exception) {
-			throw new DBException("Firestore connection failed", exception);
+	public FirestoreMap(String name) throws DatabaseException {
+		if (name == null) {
+			throw new InternalException("Name cannot be null");
+		}
+		if (name.isBlank()) {
+			throw new InternalException("Name cannot be blank");
 		}
 
-		this.document = collection.document(name);
+		Firestore firestore = FirestoreClient.getFirestore();
+
+		CollectionReference collection = firestore.collection(NAME);
 
 		DocumentSnapshot snapshot;
+		this.document = collection.document(name);
 		try {
 			snapshot = this.document.get().get();
 		} catch (ExecutionException exception) {
@@ -44,7 +48,13 @@ public class FirestoreDataMap implements DataMap<String> {
 	}
 
 	@Override
-	public boolean has(String key) throws DBException {
+	public final boolean has(String key) throws DatabaseException {
+		if (key == null) {
+			throw new InternalException("Key cannot be null");
+		}
+		if (key.isBlank()) {
+			throw new InternalException("Key cannot be blank");
+		}
 		DocumentSnapshot snapshot;
 		try {
 			snapshot = document.get().get();
@@ -57,7 +67,13 @@ public class FirestoreDataMap implements DataMap<String> {
 	}
 
 	@Override
-	public Object get(String key) throws DBException {
+	public final Object get(String key) throws DatabaseException {
+		if (key == null) {
+			throw new InternalException("Key cannot be null");
+		}
+		if (key.isBlank()) {
+			throw new InternalException("Key cannot be blank");
+		}
 		DocumentSnapshot snapshot;
 		try {
 			snapshot = document.get().get();
@@ -70,12 +86,24 @@ public class FirestoreDataMap implements DataMap<String> {
 	}
 
 	@Override
-	public void set(String key, Object value) throws DBException {
+	public final void put(String key, Object value) throws DatabaseException {
+		if (key == null) {
+			throw new InternalException("Key cannot be null");
+		}
+		if (key.isBlank()) {
+			throw new InternalException("Key cannot be blank");
+		}
 		document.update(key, value);
 	}
 
 	@Override
-	public void del(String key) throws DBException {
+	public final void del(String key) throws DatabaseException {
+		if (key == null) {
+			throw new InternalException("Key cannot be null");
+		}
+		if (key.isBlank()) {
+			throw new InternalException("Key cannot be blank");
+		}
 		document.update(key, FieldValue.delete());
 	}
 }

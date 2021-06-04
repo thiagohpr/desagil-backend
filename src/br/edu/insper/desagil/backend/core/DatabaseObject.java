@@ -1,5 +1,5 @@
 package br.edu.insper.desagil.backend.core;
 
-public interface Datum<K> {
+public interface DatabaseObject<K> {
 	K key();
 }

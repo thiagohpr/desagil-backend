@@ -2,23 +2,22 @@ package br.edu.insper.desagil.backend.core;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import br.edu.insper.desagil.backend.core.exception.BadRequestException;
-import br.edu.insper.desagil.backend.core.exception.MethodNotImplementedException;
+import br.edu.insper.desagil.backend.core.exception.NotImplementedException;
 
-public abstract class Endpoint<T> extends Context {
+public abstract class Endpoint<T> {
+	private final String uri;
 	private final Class<T> klass;
 	private final Gson gson;
 
 	@SuppressWarnings("unchecked")
 	protected Endpoint(String uri) {
-		super(uri);
+		this.uri = uri;
 
 		ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
 		Type[] types = type.getActualTypeArguments();
@@ -27,89 +26,73 @@ public abstract class Endpoint<T> extends Context {
 		this.gson = new Gson();
 	}
 
-	protected String require(Map<String, String> args, String name) throws BadRequestException {
-		String value = args.get(name);
-		if (value == null) {
-			throw new BadRequestException("Arg " + name + " not found");
-		}
-		return value;
+	protected T get(Args args) throws Exception {
+		throw new NotImplementedException("get");
 	}
 
-	protected List<String> split(String arg, String regex) {
-		return Arrays.asList(arg.split(regex));
+	protected List<T> getList(Args args) throws Exception {
+		throw new NotImplementedException("get");
 	}
 
-	@Override
-	public final String doGet(Map<String, String> args, boolean isList) throws Exception {
-		String value;
+	protected Result post(Args args, T body) throws Exception {
+		throw new NotImplementedException("post");
+	}
+
+	protected Result put(Args args, T body) throws Exception {
+		throw new NotImplementedException("put");
+	}
+
+	protected Result delete(Args args) throws Exception {
+		throw new NotImplementedException("delete");
+	}
+
+	protected Result deleteList(Args args) throws Exception {
+		throw new NotImplementedException("delete");
+	}
+
+	public final String getURI() {
+		return uri;
+	}
+
+	public final String doGet(Args args, boolean isList) throws Exception {
 		if (isList) {
-			value = gson.toJson(getList(args));
+			return gson.toJson(getList(args));
 		} else {
-			value = gson.toJson(get(args));
+			return gson.toJson(get(args));
 		}
-		return value;
 	}
 
-	@Override
-	public final String doPost(Map<String, String> args, String body) throws Exception {
-		T value;
+	public final String doPost(Args args, String requestBody) throws Exception {
+		T body;
 		try {
-			value = gson.fromJson(body, klass);
+			body = gson.fromJson(requestBody, klass);
 		} catch (JsonSyntaxException exception) {
 			throw new BadRequestException("POST body must be an object");
 		}
-		if (value == null) {
+		if (body == null) {
 			throw new BadRequestException("POST request must have a body");
 		}
-		return gson.toJson(post(args, value));
+		return gson.toJson(post(args, body));
 	}
 
-	@Override
-	public final String doPut(Map<String, String> args, String body) throws Exception {
-		T value;
+	public final String doPut(Args args, String requestBody) throws Exception {
+		T body;
 		try {
-			value = gson.fromJson(body, klass);
+			body = gson.fromJson(requestBody, klass);
 		} catch (JsonSyntaxException exception) {
 			throw new BadRequestException("PUT body must be an object");
 		}
-		if (value == null) {
+		if (body == null) {
 			throw new BadRequestException("PUT request must have a body");
 		}
-		return gson.toJson(put(args, value));
+		return gson.toJson(put(args, body));
 	}
 
-	@Override
-	public final String doDelete(Map<String, String> args, boolean isList) throws Exception {
-		String value;
+	public final String doDelete(Args args, boolean isList) throws Exception {
 		if (isList) {
-			value = gson.toJson(deleteList(args));
+			return gson.toJson(deleteList(args));
 		} else {
-			value = gson.toJson(delete(args));
+			return gson.toJson(delete(args));
 		}
-		return value;
-	}
-
-	protected T get(Map<String, String> args) throws Exception {
-		throw new MethodNotImplementedException("get");
-	}
-
-	protected List<T> getList(Map<String, String> args) throws Exception {
-		throw new MethodNotImplementedException("get");
-	}
-
-	protected Map<String, Object> post(Map<String, String> args, T body) throws Exception {
-		throw new MethodNotImplementedException("post");
-	}
-
-	protected Map<String, Object> put(Map<String, String> args, T body) throws Exception {
-		throw new MethodNotImplementedException("put");
-	}
-
-	protected Map<String, Object> delete(Map<String, String> args) throws Exception {
-		throw new MethodNotImplementedException("delete");
-	}
-
-	protected Map<String, Object> deleteList(Map<String, String> args) throws Exception {
-		throw new MethodNotImplementedException("delete");
 	}
 }
