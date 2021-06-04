@@ -258,19 +258,7 @@ public abstract class FirestoreDAO<T extends FirestoreEntity> implements DAO<Str
 
 	@Override
 	public List<T> retrieveAll() throws DBException, APIException {
-		List<T> values = new ArrayList<>();
-		for (DocumentReference document : collection.listDocuments()) {
-			DocumentSnapshot snapshot;
-			try {
-				snapshot = document.get().get();
-			} catch (ExecutionException exception) {
-				throw new FirestoreExecutionException(exception);
-			} catch (InterruptedException exception) {
-				throw new FirestoreInterruptedException(exception);
-			}
-			values.add(snapshot.toObject(klass));
-		}
-		return values;
+		return execute(collection);
 	}
 
 	@Override
