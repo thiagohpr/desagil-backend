@@ -58,10 +58,10 @@ public abstract class Endpoint<T> extends Context {
 		try {
 			value = gson.fromJson(body, klass);
 		} catch (JsonSyntaxException exception) {
-			throw new BadRequestException("POST body must be an object");
+			throw new BadRequestException("Invalid POST body: " + exception.getMessage());
 		}
 		if (value == null) {
-			throw new BadRequestException("POST request must have a body");
+			throw new BadRequestException("POST must have a body");
 		}
 		return gson.toJson(post(args, value));
 	}
@@ -72,10 +72,10 @@ public abstract class Endpoint<T> extends Context {
 		try {
 			value = gson.fromJson(body, klass);
 		} catch (JsonSyntaxException exception) {
-			throw new BadRequestException("PUT body must be an object");
+			throw new BadRequestException("Invalid PUT body: " + exception.getMessage());
 		}
 		if (value == null) {
-			throw new BadRequestException("PUT request must have a body");
+			throw new BadRequestException("PUT must have a body");
 		}
 		return gson.toJson(put(args, value));
 	}
