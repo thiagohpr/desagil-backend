@@ -1,3 +1,10 @@
+//
+// NÃO MODIFIQUE ESTE ARQUIVO!
+//
+// Este arquivo não precisa ser modificado. Se pensa
+// em fazer isso, sua resposta está na direção errada.
+//
+
 package br.edu.insper.desagil.backend.core;
 
 import java.lang.reflect.ParameterizedType;
@@ -7,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import br.edu.insper.desagil.backend.core.exception.APIException;
@@ -25,7 +33,7 @@ public abstract class Endpoint<T> extends Context {
 		Type[] types = type.getActualTypeArguments();
 		this.klass = (Class<T>) types[0];
 
-		this.gson = new Gson();
+		this.gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
 	protected String extract(Map<String, String> args, String name) throws APIException {

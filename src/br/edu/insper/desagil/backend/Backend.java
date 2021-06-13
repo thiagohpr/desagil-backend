@@ -1,3 +1,10 @@
+//
+// NÃO MODIFIQUE ESTE ARQUIVO!
+//
+// Este arquivo não precisa ser modificado. Se pensa
+// em fazer isso, sua resposta está na direção errada.
+//
+
 package br.edu.insper.desagil.backend;
 
 import java.io.FileInputStream;
@@ -24,8 +31,6 @@ public class Backend {
 	}
 
 	public static void main(String[] args) throws Exception {
-		init("firestore.json");
-
 		Dispatcher dispatcher = new Dispatcher();
 
 		Server server = new Server(PORT);
